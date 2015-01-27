@@ -13,7 +13,7 @@ class GradientRamp (colors: Array[Color], _tag: String) {
   /////////// Initialization ////////////////////////////////////////////////////////////////
 
   val tag: String = _tag
-  var count: Int = colors.length()
+  var count: Int = colors.length
   val unit: Double = 1.0 / (count.toDouble - 1.0)
 
   var ramp: Array[RampStop] = for ((stop: Color, i: Int) <- colors) yield {
@@ -26,7 +26,7 @@ class GradientRamp (colors: Array[Color], _tag: String) {
   def getRampColorValue(offset: Double, lowerBound: Double, upperBound: Double): Color = {
 
     var firstStop: RampStop = ramp(0)
-    var secondStop: RampStop = ramp(ramp.length() - 1)
+    var secondStop: RampStop = ramp(ramp.length - 1)
 
     val maxByteValue: Int = 255
     var scaledVal: Double = offset
