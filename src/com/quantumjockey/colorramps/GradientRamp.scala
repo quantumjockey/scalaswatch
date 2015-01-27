@@ -13,11 +13,13 @@ class GradientRamp (colors: Array[Color], _tag: String) {
   /////////// Initialization ////////////////////////////////////////////////////////////////
 
   val tag: String = _tag
-  var count: Int = colors.length
-  val unit: Double = 1.0 / (count.toDouble - 1.0)
+  private val count: Int = colors.length
+  private val unit: Double = 1.0 / (count.toDouble - 1.0)
+  private var i: Int = 0
 
-  var ramp: Array[RampStop] = for ((stop: Color, i: Int) <- colors) yield {
+  var ramp: Array[RampStop] = for (stop: Color <- colors) yield {
     val limit: Double = i.toDouble * unit
+    i += 1
     new RampStop(stop, limit)
   }
 
@@ -34,14 +36,11 @@ class GradientRamp (colors: Array[Color], _tag: String) {
     if (offset < lowerBound) scaledVal = lowerBound
     if (offset > upperBound) scaledVal = upperBound
 
-    for (boundary:RampStop <- ramp) yield {
-      if (boundary.offset < scaledVal && boundary.offset > lowerBound) {
-        firstStop = boundary
-      }
-      if (boundary.offset > scaledVal && boundary.offset < upperBound && secondStop != boundary) {
-        secondStop = boundary
-      }
-    }
+    ramp.takeWhile(isBetweenBounds(_, lowerBound, upperBound))
+      .foreach { (stop: RampStop) => {
+      if (stop.offset < scaledVal) firstStop = stop
+      if (stop.offset > scaledVal) secondStop = stop
+    }}
 
     Color.rgb(
       calculateChannelValue(firstStop, secondStop, 'R', scaledVal, maxByteValue),
@@ -51,6 +50,10 @@ class GradientRamp (colors: Array[Color], _tag: String) {
   }
 
   /////////// Private Methods ///////////////////////////////////////////////////////////////
+
+  private def isBetweenBounds(stop: RampStop, lower: Double, upper: Double): Boolean = {
+    stop.offset > lower && stop.offset < upper
+  }
 
   private def calculateChannelValue(_before: RampStop, _after: RampStop, _colorComponent: Char, _offset: Double, _maxValue: Int): Int = {
 
@@ -71,7 +74,6 @@ class GradientRamp (colors: Array[Color], _tag: String) {
 
     byteValue
   }
-
 
   private def getRgbChannelValue(_color: Color, _component: Char): Double = {
     _component match {
