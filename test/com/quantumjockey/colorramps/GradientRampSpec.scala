@@ -1,56 +1,36 @@
 package com.quantumjockey.colorramps
 
+import javafx.scene.paint.Color
+
 import org.scalatest._
 
 class GradientRampSpec extends FlatSpec with Matchers {
 
-  "A Gradient Ramp" should "return the color sampled from a specified range" in {
+  /////////// Setup /////////////////////////////////////////////////////////////////////////
 
+  var stops: Array[Color] = Array(Color.VIOLET, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.RED)
+  var ramp = new GradientRamp(stops)
+
+  /////////// Requirements //////////////////////////////////////////////////////////////////
+
+  "A Gradient Ramp" should "return the color sampled from a specified range" in {
+    ramp.getRampColorValue(0.6, 0.0, 1.0) should be (Color.YELLOW)
   }
 
-//  /////////// Fields //////////////////////////////////////////////////////////////////////
-//
-//  Color[] stops;
-//  GradientRamp ramp;
-//
-//  /////////// Setup/Teardown //////////////////////////////////////////////////////////////
-//
-//  @Before
-//  public void setUp() throws Exception {
-//    stops = new Color[]{Color.VIOLET, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.RED};
-//    ramp = new GradientRamp(stops);
-//  }
-//
-//  @After
-//  public void tearDown() throws Exception {
-//
-//  }
-//
-//  /////////// Tests ///////////////////////////////////////////////////////////////////////
-//
-//  @Test
-//  public void GetRampColorValue_AboveLimit_HighestColorStop(){
-//    Assert.assertEquals(Color.RED, ramp.getRampColorValue(2.0, 0.0, 1.0));
-//  }
-//
-//  @Test
-//  public void GetRampColorValue_BelowLimit_LowestColorStop(){
-//    Assert.assertEquals(Color.VIOLET, ramp.getRampColorValue(-1.0, 0.0, 1.0));
-//  }
-//
-//  @Test
-//  public void GetRampColorValue_Max_ReturnColor(){
-//    Assert.assertEquals(Color.RED, ramp.getRampColorValue(1.0, 0.0, 1.0));
-//  }
-//
-//  @Test
-//  public void GetRampColorValue_Min_ReturnColor(){
-//    Assert.assertEquals(Color.VIOLET, ramp.getRampColorValue(0.0, 0.0, 1.0));
-//  }
-//
-//  @Test
-//  public void GetRampColorValue_WithinLimit_ReturnColor(){
-//    Assert.assertEquals(Color.YELLOW, ramp.getRampColorValue(0.6, 0.0, 1.0));
-//  }
+  it should "return highest color if given input above limit" in {
+    ramp.getRampColorValue(2.0, 0.0, 1.0) should be (Color.RED)
+  }
+
+  it should "return lowest color if given input below limit" in {
+    ramp.getRampColorValue(-1.0, 0.0, 1.0) should be (Color.VIOLET)
+  }
+
+  it should "return highest color if input equal to max bound" in {
+    ramp.getRampColorValue(1.0, 0.0, 1.0) should be (Color.RED)
+  }
+
+  it should "return lowest color if input equal to min bound" in {
+    ramp.getRampColorValue(0.0, 0.0, 1.0) should be (Color.VIOLET)
+  }
 
 }
