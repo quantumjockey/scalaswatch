@@ -2,9 +2,13 @@ package com.quantumjockey.colorramps
 
 import javafx.scene.paint.Color
 
-class GradientRamp (colors: Array[Color], _tag: String) {
+class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _upperBound: Double) {
 
   /////////// (Additional) Constructors /////////////////////////////////////////////////////
+
+  def this(colors: Array[Color], _tag: String) {
+    this(colors, _tag, 0.0, 1.0)
+  }
 
   def this(colors: Array[Color]) {
     this(colors, "Unnamed Ramp")
@@ -13,6 +17,9 @@ class GradientRamp (colors: Array[Color], _tag: String) {
   /////////// Initialization ////////////////////////////////////////////////////////////////
 
   val tag: String = _tag
+  val lowerBound: Double = _lowerBound
+  val upperBound: Double = _upperBound
+
   private val count: Int = colors.length
   private val unit: Double = 1.0 / (count.toDouble - 1.0)
   private var i: Int = 0
@@ -25,7 +32,7 @@ class GradientRamp (colors: Array[Color], _tag: String) {
 
   /////////// Public Methods ////////////////////////////////////////////////////////////////
 
-  def getRampColorValue(offset: Double, lowerBound: Double, upperBound: Double): Color = {
+  def getRampColorValue(offset: Double): Color = {
 
     var firstStop: RampStop = ramp(0)
     var secondStop: RampStop = ramp(ramp.length - 1)
@@ -36,7 +43,7 @@ class GradientRamp (colors: Array[Color], _tag: String) {
     if (offset < lowerBound) scaledVal = lowerBound
     if (offset > upperBound) scaledVal = upperBound
 
-    ramp.takeWhile(isBetweenBounds(_, lowerBound, upperBound))
+    ramp.withFilter(isBetweenBounds(_))
       .foreach { (stop: RampStop) => {
       if (stop.offset < scaledVal) firstStop = stop
       if (stop.offset > scaledVal) secondStop = stop
@@ -51,8 +58,8 @@ class GradientRamp (colors: Array[Color], _tag: String) {
 
   /////////// Private Methods ///////////////////////////////////////////////////////////////
 
-  private def isBetweenBounds(stop: RampStop, lower: Double, upper: Double): Boolean = {
-    stop.offset > lower && stop.offset < upper
+  private def isBetweenBounds(stop: RampStop): Boolean = {
+    stop.offset > lowerBound && stop.offset < upperBound
   }
 
   private def calculateChannelValue(_before: RampStop, _after: RampStop, _colorComponent: Char, _offset: Double, _maxValue: Int): Int = {
