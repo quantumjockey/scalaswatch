@@ -1,6 +1,7 @@
 package com.quantumjockey.colorramps
 
 import javafx.scene.paint.Color
+import scala.util.control._
 
 class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _upperBound: Double) {
 
@@ -24,7 +25,7 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
   private val unit: Double = 1.0 / (count.toDouble - 1.0)
   private var i: Int = 0
 
-  var ramp: Array[RampStop] = for (stop: Color <- colors) yield {
+  val ramp: Array[RampStop] = for (stop: Color <- colors) yield {
     val limit: Double = i.toDouble * unit
     i += 1
     new RampStop(stop, limit)
@@ -40,14 +41,24 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
     val maxByteValue: Int = 255
     var scaledVal: Double = offset
 
+    val flowController = new Breaks
+
     if (offset < lowerBound) scaledVal = lowerBound
     if (offset > upperBound) scaledVal = upperBound
 
-    ramp.withFilter(isBetweenBounds(_))
-      .foreach { (stop: RampStop) => {
-      if (stop.offset < scaledVal) firstStop = stop
-      if (stop.offset > scaledVal) secondStop = stop
-    }}
+    flowController.breakable {
+      ramp.foreach { (stop: RampStop) => {
+        if (stop.offset < scaledVal && stop.offset > lowerBound) {
+          firstStop = stop
+        }
+
+        if (stop.offset > scaledVal && stop.offset < upperBound) {
+          secondStop = stop
+          flowController.break
+        }
+      }
+      }
+    }
 
     Color.rgb(
       calculateChannelValue(firstStop, secondStop, 'R', scaledVal, maxByteValue),
@@ -57,10 +68,6 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
   }
 
   /////////// Private Methods ///////////////////////////////////////////////////////////////
-
-  private def isBetweenBounds(stop: RampStop): Boolean = {
-    stop.offset > lowerBound && stop.offset < upperBound
-  }
 
   private def calculateChannelValue(_before: RampStop, _after: RampStop, _colorComponent: Char, _offset: Double, _maxValue: Int): Int = {
 
