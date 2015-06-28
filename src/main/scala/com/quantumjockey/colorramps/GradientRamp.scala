@@ -2,7 +2,7 @@ package com.quantumjockey.colorramps
 
 import javafx.scene.paint.Color
 
-class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _upperBound: Double) {
+class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Double, val upperBound: Double) {
 
   // Constants
 
@@ -19,10 +19,6 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
   }
 
   // Initialization
-
-  val tag: String = _tag
-  val lowerBound: Double = _lowerBound
-  val upperBound: Double = _upperBound
 
   private val count: Int = colors.length
   private val unit: Double = 1.0 / (count.toDouble - 1.0)
