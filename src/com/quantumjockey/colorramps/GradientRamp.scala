@@ -41,24 +41,26 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
     val maxByteValue: Int = 255
     var scaledVal: Double = offset
 
-    val flowController = new Breaks
-
     if (offset < lowerBound) scaledVal = lowerBound
     if (offset > upperBound) scaledVal = upperBound
 
-    flowController.breakable {
-      ramp.foreach { (stop: RampStop) => {
-        if (stop.offset < scaledVal && stop.offset > lowerBound) {
-          firstStop = stop
-        }
-
-        if (stop.offset > scaledVal && stop.offset < upperBound) {
-          secondStop = stop
-          flowController.break
-        }
-      }
+    def getFirst = (stop: RampStop) => {
+      if (stop.offset < scaledVal && stop.offset > lowerBound) {
+        firstStop = stop
       }
     }
+
+    def getSecond = (stop: RampStop) => {
+      if (stop.offset > scaledVal && stop.offset < upperBound) {
+        secondStop = stop
+      }
+    }
+
+      ramp.foreach { (stop: RampStop) => {
+        getFirst(stop)
+        getSecond(stop)
+      }
+      }
 
     Color.rgb(
       calculateChannelValue(firstStop, secondStop, 'R', scaledVal, maxByteValue),
