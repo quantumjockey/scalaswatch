@@ -4,11 +4,11 @@ import javafx.scene.paint.Color
 
 class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _upperBound: Double) {
 
-  /////////// Constants /////////////////////////////////////////////////////
+  // Constants
 
   val MAX_BYTE_VALUE: Int = 255
 
-  /////////// (Additional) Constructors /////////////////////////////////////////////////////
+  // (Additional) Constructors
 
   def this(colors: Array[Color], _tag: String) {
     this(colors, _tag, 0.0, 1.0)
@@ -18,7 +18,7 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
     this(colors, "Unnamed Ramp")
   }
 
-  /////////// Initialization ////////////////////////////////////////////////////////////////
+  // Initialization
 
   val tag: String = _tag
   val lowerBound: Double = _lowerBound
@@ -34,7 +34,7 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
     new RampStop(stop, limit)
   }
 
-  /////////// Public Methods ////////////////////////////////////////////////////////////////
+  // Public Methods
 
   def getRampColorValue(offset: Double): Color = {
 
@@ -72,7 +72,7 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
     )
   }
 
-  /////////// Private Methods ///////////////////////////////////////////////////////////////
+  // Private Methods
 
   private def calculateChannelValue(_before: RampStop, _after: RampStop, _colorComponent: Char, _offset: Double, _maxValue: Int): Int = {
 

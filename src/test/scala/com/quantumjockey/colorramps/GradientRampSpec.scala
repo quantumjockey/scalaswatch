@@ -5,12 +5,12 @@ import org.scalatest._
 
 class GradientRampSpec extends FlatSpec with Matchers {
 
-  /////////// Setup /////////////////////////////////////////////////////////////////////////
+  // Setup
 
   var stops: Array[Color] = Array(Color.VIOLET, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.RED)
   var ramp = new GradientRamp(stops)
 
-  /////////// Requirements //////////////////////////////////////////////////////////////////
+  // Requirements
 
   "A Gradient Ramp" should "return the color sampled from a specified range" in {
     ramp.getRampColorValue(0.6) should be (Color.YELLOW)
