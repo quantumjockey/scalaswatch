@@ -10,13 +10,9 @@ class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Doubl
 
   // (Additional) Constructors
 
-  def this(colors: Array[Color], _tag: String) {
-    this(colors, _tag, 0.0, 1.0)
-  }
+  def this(colors: Array[Color], _tag: String) = this(colors, _tag, 0.0, 1.0)
 
-  def this(colors: Array[Color]) {
-    this(colors, "Unnamed Ramp")
-  }
+  def this(colors: Array[Color]) = this(colors, "Unnamed Ramp")
 
   // Initialization
 
