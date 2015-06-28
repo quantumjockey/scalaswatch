@@ -50,10 +50,9 @@ class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Doubl
       }
     }
 
-    ramp.foreach { (stop: RampStop) => {
+    for (stop: RampStop <- ramp) {
       getFirst(stop)
       getSecond(stop)
-    }
     }
 
     Color.rgb(
