@@ -1,7 +1,6 @@
 package com.quantumjockey.colorramps
 
 import javafx.scene.paint.Color
-
 import org.scalatest._
 
 class GradientRampSpec extends FlatSpec with Matchers {

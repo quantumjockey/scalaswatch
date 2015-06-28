@@ -1,7 +1,6 @@
 package com.quantumjockey.colorramps
 
 import javafx.scene.paint.Color
-import scala.util.control._
 
 class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _upperBound: Double) {
 
@@ -91,13 +90,11 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
     byteValue
   }
 
-  private def getRgbChannelValue(_color: Color, _component: Char): Double = {
-    _component match {
-      case 'R' => _color.getRed
-      case 'G' => _color.getGreen
-      case 'B' => _color.getBlue
-      case _ => _color.getRed
-    }
+  private def getRgbChannelValue(_color: Color, _component: Char): Double = _component match {
+    case 'R' => _color.getRed
+    case 'G' => _color.getGreen
+    case 'B' => _color.getBlue
+    case _ => _color.getRed
   }
 
 }
