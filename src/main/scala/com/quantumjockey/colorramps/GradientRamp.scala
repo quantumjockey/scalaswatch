@@ -4,18 +4,15 @@ import javafx.scene.paint.Color
 
 class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Double, val upperBound: Double) {
 
-  // Constants
-
-  val MaxByteValue: Int = 255
-
   // (Additional) Constructors
-
   def this(colors: Array[Color], _tag: String) = this(colors, _tag, 0.0, 1.0)
 
   def this(colors: Array[Color]) = this(colors, "Unnamed Ramp")
 
-  // Initialization
+  // Constants
+  val MaxByteValue: Int = 255
 
+  // Initialization
   private val unit: Double = 1.0 / (colors.length.toDouble - 1.0)
   private var i: Int = 0
 
@@ -37,10 +34,10 @@ class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Doubl
 
     val firstStop = {
       val matching = ramp.takeWhile((stop: RampStop) => stop.offset < scaledVal && stop.offset > lowerBound)
-      if (matching.length > 0) matching(0) else ramp(0)
+      if (matching.length > 0) matching(matching.length - 1) else ramp(0)
     }
 
-    val secondStop = {
+    val secondStop: RampStop = {
       val matching = ramp.takeWhile((stop: RampStop) => stop.offset > scaledVal && stop.offset < upperBound)
       if (matching.length > 0) matching(0) else ramp(ramp.length - 1)
     }
