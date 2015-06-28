@@ -4,6 +4,10 @@ import javafx.scene.paint.Color
 
 class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _upperBound: Double) {
 
+  /////////// Constants /////////////////////////////////////////////////////
+
+  val MAX_BYTE_VALUE: Int = 255
+
   /////////// (Additional) Constructors /////////////////////////////////////////////////////
 
   def this(colors: Array[Color], _tag: String) {
@@ -37,11 +41,11 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
     var firstStop: RampStop = ramp(0)
     var secondStop: RampStop = ramp(ramp.length - 1)
 
-    val maxByteValue: Int = 255
-    var scaledVal: Double = offset
-
-    if (offset < lowerBound) scaledVal = lowerBound
-    if (offset > upperBound) scaledVal = upperBound
+    val scaledVal: Double = offset match {
+      case x if x < lowerBound => lowerBound
+      case x if x > upperBound => upperBound
+      case _ => offset
+    }
 
     def getFirst = (stop: RampStop) => {
       if (stop.offset < scaledVal && stop.offset > lowerBound) {
@@ -56,15 +60,15 @@ class GradientRamp (colors: Array[Color], _tag: String, _lowerBound: Double, _up
     }
 
       ramp.foreach { (stop: RampStop) => {
-        getFirst(stop)
-        getSecond(stop)
-      }
+          getFirst(stop)
+          getSecond(stop)
+        }
       }
 
     Color.rgb(
-      calculateChannelValue(firstStop, secondStop, 'R', scaledVal, maxByteValue),
-      calculateChannelValue(firstStop, secondStop, 'G', scaledVal, maxByteValue),
-      calculateChannelValue(firstStop, secondStop, 'B', scaledVal, maxByteValue)
+      calculateChannelValue(firstStop, secondStop, 'R', scaledVal, MAX_BYTE_VALUE),
+      calculateChannelValue(firstStop, secondStop, 'G', scaledVal, MAX_BYTE_VALUE),
+      calculateChannelValue(firstStop, secondStop, 'B', scaledVal, MAX_BYTE_VALUE)
     )
   }
 
