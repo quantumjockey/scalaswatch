@@ -16,8 +16,7 @@ class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Doubl
 
   // Initialization
 
-  private val count: Int = colors.length
-  private val unit: Double = 1.0 / (count.toDouble - 1.0)
+  private val unit: Double = 1.0 / (colors.length.toDouble - 1.0)
   private var i: Int = 0
 
   val ramp: Array[RampStop] = for (stop: Color <- colors) yield {
@@ -51,11 +50,11 @@ class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Doubl
       }
     }
 
-      ramp.foreach { (stop: RampStop) => {
-          getFirst(stop)
-          getSecond(stop)
-        }
-      }
+    ramp.foreach { (stop: RampStop) => {
+      getFirst(stop)
+      getSecond(stop)
+    }
+    }
 
     Color.rgb(
       calculateChannelValue(firstStop, secondStop, 'R', scaledVal, MAX_BYTE_VALUE),
@@ -74,14 +73,14 @@ class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Doubl
     val beforeOffset: Double = _before.offset
     val beforeColorChannelValue: Double = getRgbChannelValue(_before.color, _colorComponent)
 
-    val max: Int = _maxValue / 255
+    val max: Int = _maxValue / MAX_BYTE_VALUE
 
     val channelRange: Double = afterColorChannelValue - beforeColorChannelValue
     val scaleFactor: Double = (_offset - beforeOffset) / (afterOffset - beforeOffset)
 
     val newChannel: Float = scaleFactor.toFloat * channelRange.toFloat
     val result: Float = newChannel + beforeColorChannelValue.toFloat
-    val byteValue: Int = ((if (result < max) result else max) * 255).toInt
+    val byteValue: Int = ((if (result < max) result else max) * MAX_BYTE_VALUE).toInt
 
     byteValue
   }
