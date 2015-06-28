@@ -29,30 +29,20 @@ class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Doubl
 
   def getRampColorValue(offset: Double): Color = {
 
-    var firstStop: RampStop = ramp(0)
-    var secondStop: RampStop = ramp(ramp.length - 1)
-
     val scaledVal: Double = offset match {
       case x if x < lowerBound => lowerBound
       case x if x > upperBound => upperBound
       case _ => offset
     }
 
-    def getFirst = (stop: RampStop) => {
-      if (stop.offset < scaledVal && stop.offset > lowerBound) {
-        firstStop = stop
-      }
+    val firstStop = {
+      val matching = ramp.takeWhile((stop: RampStop) => stop.offset < scaledVal && stop.offset > lowerBound)
+      if (matching.length > 0) matching(0) else ramp(0)
     }
 
-    def getSecond = (stop: RampStop) => {
-      if (stop.offset > scaledVal && stop.offset < upperBound) {
-        secondStop = stop
-      }
-    }
-
-    for (stop: RampStop <- ramp) {
-      getFirst(stop)
-      getSecond(stop)
+    val secondStop = {
+      val matching = ramp.takeWhile((stop: RampStop) => stop.offset > scaledVal && stop.offset < upperBound)
+      if (matching.length > 0) matching(0) else ramp(ramp.length - 1)
     }
 
     Color.rgb(
