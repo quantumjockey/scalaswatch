@@ -15,12 +15,10 @@ class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Doubl
 
   // Initialization
   private val unit: Double = MaxScaleValue / (colors.length.toDouble - MaxScaleValue)
-  private var i: Int = 0
 
-  val ramp: Array[RampStop] = for (stop: Color <- colors) yield {
+  val ramp: IndexedSeq[RampStop] = for (i <- colors.indices) yield {
     val limit: Double = i.toDouble * unit
-    i += 1
-    new RampStop(stop, limit)
+    new RampStop(colors.apply(i), limit)
   }
 
   // Public Methods
