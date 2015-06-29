@@ -33,12 +33,12 @@ class GradientRamp (colors: Array[Color], val tag: String, val lowerBound: Doubl
 
     val firstStop = {
       val matching = ramp.takeWhile((stop: RampStop) => stop.offset < scaledVal && stop.offset > lowerBound)
-      if (matching.length > 0) matching(matching.length - 1) else ramp(0)
+      if (matching.nonEmpty) matching.last else ramp.head
     }
 
     val secondStop: RampStop = {
       val matching = ramp.takeWhile((stop: RampStop) => stop.offset > scaledVal && stop.offset < upperBound)
-      if (matching.length > 0) matching(0) else ramp(ramp.length - 1)
+      if (matching.nonEmpty) matching.head else ramp.last
     }
 
     Color.rgb(
